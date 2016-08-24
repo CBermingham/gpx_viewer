@@ -8,6 +8,8 @@ dirs = os.listdir(path)
 
 lat_rides = []
 lon_rides = []
+lat_runs = []
+lon_runs = []
 for file in dirs:
 	a = []
 	b = []
@@ -21,14 +23,27 @@ for file in dirs:
 			    if "lat" in l:
 			    	a.append(float(l[15:24]))
 			    	b.append(float(l[32:41]))
-	lat_rides.append(a)	
-	lon_rides.append(b)	
+			lat_rides.append(a)	
+			lon_rides.append(b)	
+		elif "Run" in file:
+			filename = path + file
+			f = open(filename, 'rU')
+			lines=f.readlines()
+			f.close()
+			for l in lines:
+			    if "lat" in l:
+			    	a.append(float(l[15:24]))
+			    	b.append(float(l[32:41]))
+			lat_runs.append(a)	
+			lon_runs.append(b)	
 
 gmap = gmplot.GoogleMapPlotter(51.46, -2.59, 7)
 for i in range(0, len(lat_rides)):
-	gmap.plot(lat_rides[i], lon_rides[i])
-gmap.draw("myrides.html")
-webbrowser.open_new_tab("file:///Users/Charlotte/Documents/Code/gpx_viewer/myrides.html")
+	gmap.plot(lat_rides[i], lon_rides[i], 'r', edge_width=3, alpha=0.3)
+for i in range(0, len(lat_runs)):
+	gmap.plot(lat_runs[i], lon_runs[i], 'b', edge_width=3, alpha=0.3)
+gmap.draw("myactivities.html")
+webbrowser.open_new_tab("file:///Users/Charlotte/Documents/Code/gpx_viewer/myactivities.html")
 
 # lat_ride = []
 # lon_ride = []
