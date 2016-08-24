@@ -3,28 +3,35 @@ import matplotlib.pyplot as plt
 import gmplot
 import webbrowser
 
+# Set location of folder containing GPX files
 path = '/Users/Charlotte/Documents/Code/gpx_viewer/activities/'
 dirs = os.listdir(path)
 
+# Lists store the latitude and longitude values of each run/ride.
 lat_rides = []
 lon_rides = []
 lat_runs = []
 lon_runs = []
+
 for file in dirs:
 	a = []
 	b = []
 	if not file.startswith('.'):
+		# Iterate through the "Ride" files
 		if "Ride" in file:
 			filename = path + file
 			f = open(filename, 'rU')
 			lines=f.readlines()
 			f.close()
+			# Extract the longitude and latitude values for the ride, appending them to a list (a and b)
 			for l in lines:
 			    if "lat" in l:
 			    	a.append(float(l[15:24]))
 			    	b.append(float(l[32:41]))
+			# Append the list of latitude (longitude) values to a list that will contain all the Rides
 			lat_rides.append(a)	
 			lon_rides.append(b)	
+		# Same for runs
 		elif "Run" in file:
 			filename = path + file
 			f = open(filename, 'rU')
@@ -37,11 +44,16 @@ for file in dirs:
 			lat_runs.append(a)	
 			lon_runs.append(b)	
 
+# Centre the map, set zoom level
 gmap = gmplot.GoogleMapPlotter(51.46, -2.59, 7)
+
+# Plot the rides and runs as a semi-transparent trace for each activity, red for rides, blue for runs
 for i in range(0, len(lat_rides)):
 	gmap.plot(lat_rides[i], lon_rides[i], 'r', edge_width=3, alpha=0.3)
 for i in range(0, len(lat_runs)):
 	gmap.plot(lat_runs[i], lon_runs[i], 'b', edge_width=3, alpha=0.3)
+
+# Draw the plot and display in a browser
 gmap.draw("myactivities.html")
 webbrowser.open_new_tab("file:///Users/Charlotte/Documents/Code/gpx_viewer/myactivities.html")
 
